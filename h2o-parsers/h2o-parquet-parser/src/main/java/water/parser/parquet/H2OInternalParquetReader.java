@@ -102,7 +102,7 @@ class H2OInternalParquetRecordReader<T> {
     if (current == totalCountLoadedSoFar) {
       if (current != 0) {
         totalTimeSpentProcessingRecords += (System.currentTimeMillis() - startedAssemblingCurrentBlockAt);
-        if (Log.isLoggingFor("info")) {
+        if (Log.isLoggingFor(Log.Level.INFO)) {
           Log.info("Assembled and processed " + totalCountLoadedSoFar + " records from " + columnCount + " columns in " + totalTimeSpentProcessingRecords + " ms: "+((float)totalCountLoadedSoFar / totalTimeSpentProcessingRecords) + " rec/ms, " + ((float)totalCountLoadedSoFar * columnCount / totalTimeSpentProcessingRecords) + " cell/ms");
           final long totalTime = totalTimeSpentProcessingRecords + totalTimeSpentReadingBytes;
           if (totalTime != 0) {
@@ -121,8 +121,8 @@ class H2OInternalParquetRecordReader<T> {
       }
       long timeSpentReading = System.currentTimeMillis() - t0;
       totalTimeSpentReadingBytes += timeSpentReading;
-      if (Log.isLoggingFor("info")) Log.info("block read in memory in " + timeSpentReading + " ms. row count = " + pages.getRowCount());
-      if (Log.isLoggingFor("debug")) Log.debug("initializing Record assembly with requested schema " + requestedSchema);
+      Log.info("block read in memory in " + timeSpentReading + " ms. row count = " + pages.getRowCount());
+      Log.debug("initializing Record assembly with requested schema " + requestedSchema);
       MessageColumnIO columnIO = columnIOFactory.getColumnIO(requestedSchema, fileSchema, strictTypeChecking);
       recordReader = columnIO.getRecordReader(pages, recordConverter, filter);
       startedAssemblingCurrentBlockAt = System.currentTimeMillis();
