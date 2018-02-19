@@ -8,15 +8,18 @@ def call(final pipelineContext) {
     def makeTarget = load('h2o-3/scripts/jenkins/groovy/makeTarget.groovy')
 
     def stageName = 'Build H2O-3'
+    echo 'BREAK 4'
 
     withCustomCommitStates(scm, pipelineContext.getBuildConfig().H2O_OPS_TOKEN, "${pipelineContext.getBuildConfig().getGitHubCommitStateContext(stageName)}") {
         pipelineContext.getBuildSummary().addStageSummary(this, stageName, 'h2o-3')
         pipelineContext.getBuildSummary().setStageDetails(this, stageName, env.NODE_NAME, env.WORKSPACE)
+        echo 'BREAK 5'
         try {
             // Launch docker container, build h2o-3, create test packages and archive artifacts
             def buildEnv = pipelineContext.getBuildConfig().getBuildEnv() + "PYTHON_VERSION=${PYTHON_VERSION}" + "R_VERSION=${R_VERSION}"
             stage(stageName) {
                 insideDocker(buildEnv, pipelineContext.getBuildConfig().DEFAULT_IMAGE, pipelineContext.getBuildConfig().DOCKER_REGISTRY, 30, 'MINUTES') {
+                    echo 'BREAK 6'
                     try {
                         makeTarget(pipelineContext) {
                             target = 'build-h2o-3'
